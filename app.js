@@ -39,44 +39,65 @@ inquirer.prompt([
 ]).then(function ( {name, id, email, officeNumber} ) {
   const newManager = new Manager(name, id, email, officeNumber);
   answersArray.push(newManager);
-  let selectCheck = true;
-  while(selectCheck === true) {
-    inquirer.prompt([
-      {
-       type: "list",
-        message: "Would you like to add more team members?",
-        name: "selection",
-        choices: ['Engineer', 'Intern', 'None'],
-      }
-    ]).then(function( {selection} ) {
-      if(selection === 'Engineer') {
-        selectCheck = true;
-        inquirer.prompt([
-          {
-            type: "input",
-            message: "Insert engineer stuff",
-            name: "engineering",
-          }
-        ])
-      } else if(selection === 'Intern') {
-        selectCounter = true;
-        inquirer.prompt([
-          {
-            type: "input",
-            message: "Insert intern stuff",
-            name: "interning",
-          }
-        ])
-      } else if(selection === 'None') {
-        selectionCount = false;
-        return;
-      }
-    })
+  for (let i = 1; i > 0; i++) {
+    askForTeam();
   }
 })
 
-const askQuestion = () => {
-  inquirer.pro
+function askForTeam() {
+  return inquirer
+    .prompt([
+      {
+        type: "list",
+        message: "Would you like to add more team members?",
+        name: "selection",
+        choices: ['Engineer', 'Intern', 'None'],
+      } 
+    ])
+    .then(function( {selection} ) {
+      if(selection === 'Engineer') {
+        i++;
+        askEngineeringQuestions();
+      } else if(selection === 'Intern') {
+        i++;
+        askInternQuestions();
+      } else if(selection === 'None') {
+        i = 0;
+        process.exit(0);
+      }
+  })
+}
+
+const askTeamQuestion = () => {
+  inquirer.prompt([
+    {
+     type: "list",
+      message: "Would you like to add more team members?",
+      name: "selection",
+      choices: ['Engineer', 'Intern', 'None'],
+    }
+  ])
+  // return selection;
+}
+
+const askEngineeringQuestions = () => {
+  inquirer.prompt([
+    {
+      type: "input",
+      message: "Insert engineer stuff",
+      name: "engineering",
+    }
+  ])
+}
+
+const askInternQuestions = () => {
+  inquirer.prompt([
+    {
+      type: "input",
+      message: "Insert intern stuff",
+      name: "interning",
+    }
+  ])
 }
 
 // After the user has input all employees desired, call the `render` function (required
