@@ -39,9 +39,9 @@ inquirer.prompt([
 ]).then(function ( {name, id, email, officeNumber} ) {
   const newManager = new Manager(name, id, email, officeNumber);
   answersArray.push(newManager);
-  for (let i = 1; i > 0; i++) {
-    askForTeam();
-  }
+  console.log(answersArray);
+  askForTeam();
+  
 })
 
 function askForTeam() {
@@ -56,38 +56,47 @@ function askForTeam() {
     ])
     .then(function( {selection} ) {
       if(selection === 'Engineer') {
-        i++;
         askEngineeringQuestions();
       } else if(selection === 'Intern') {
-        i++;
         askInternQuestions();
       } else if(selection === 'None') {
-        i = 0;
-        process.exit(0);
+        console.log(answersArray);
+        fs.writeFile(outputPath, render(answersArray), err => err ? console.error(err) : console.log('Success!'));
+        // render(answersArray)
+        
+        // process.exit(0);
       }
   })
-}
-
-const askTeamQuestion = () => {
-  inquirer.prompt([
-    {
-     type: "list",
-      message: "Would you like to add more team members?",
-      name: "selection",
-      choices: ['Engineer', 'Intern', 'None'],
-    }
-  ])
-  // return selection;
 }
 
 const askEngineeringQuestions = () => {
   inquirer.prompt([
     {
       type: "input",
-      message: "Insert engineer stuff",
-      name: "engineering",
-    }
-  ])
+      message: "What is the engineer's name?",
+      name: "name",
+    },
+    {
+      type: "input",
+      message: "What is the engineer's id?",
+      name: "id",
+    },
+    {
+      type: "input",
+      message: "What is the engineer's email?",
+      name: "email",
+    },
+    {
+      type: "input",
+      message: "What is the engineer's github?",
+      name: "github",
+    },
+  ]).then(function( {name, id, email, github} ) {
+    const newEngineer = new Engineer(name, id, email, github);
+    answersArray.push(newEngineer);
+    console.log(answersArray);
+    askForTeam();
+  })
 }
 
 const askInternQuestions = () => {
@@ -97,13 +106,16 @@ const askInternQuestions = () => {
       message: "Insert intern stuff",
       name: "interning",
     }
-  ])
+  ]).then(function(data) {
+    askForTeam();
+  })
 }
 
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
 // generate and return a block of HTML including templated divs for each employee!
-render([])
+
+
 // After you have your html, you're now ready to create an HTML file using the HTML
 // returned from the `render` function. Now write it to a file named `team.html` in the
 // `output` folder. You can use the variable `outputPath` above target this location.
