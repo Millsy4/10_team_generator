@@ -62,9 +62,6 @@ function askForTeam() {
       } else if(selection === 'None') {
         console.log(answersArray);
         fs.writeFile(outputPath, render(answersArray), err => err ? console.error(err) : console.log('Success!'));
-        // render(answersArray)
-        
-        // process.exit(0);
       }
   })
 }
@@ -103,10 +100,28 @@ const askInternQuestions = () => {
   inquirer.prompt([
     {
       type: "input",
-      message: "Insert intern stuff",
-      name: "interning",
-    }
-  ]).then(function(data) {
+      message: "What is the intern's name?",
+      name: "name",
+    },
+    {
+      type: "input",
+      message: "What is the intern's id?",
+      name: "id",
+    },
+    {
+      type: "input",
+      message: "What is the intern's email?",
+      name: "email",
+    },
+    {
+      type: "input",
+      message: "What is the intern's school?",
+      name: "school",
+    },
+  ]).then(function( {name, id, email, school} ) {
+    const newIntern = new Intern(name, id, email, school);
+    answersArray.push(newIntern);
+    console.log(answersArray);
     askForTeam();
   })
 }
